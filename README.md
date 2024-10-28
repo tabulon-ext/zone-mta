@@ -1,6 +1,6 @@
 # ZoneMTA (internal code name X-699)
 
-Modern outbound SMTP relay (MTA/MSA) built on Node.js and MongoDB (queue storage). It's kind of like Postfix for outbound but is able to use multiple local IP addresses and is easily extendable using plugins.
+Outbound SMTP relay (MTA/MSA) built on Node.js and MongoDB (queue storage).
 
 ```
 ███████╗ ██████╗ ███╗   ██╗███████╗███╗   ███╗████████╗ █████╗
@@ -17,21 +17,15 @@ ZoneMTA is comparable to [Haraka](https://haraka.github.io/) but unlike Haraka i
 
 There's also a web-based [administration interface](https://github.com/zone-eu/zmta-webadmin) (needs to be installed separately).
 
-## Upgrade notes
-
-ZoneMTA version 1.1 uses a different application configuration scheme than 1.0. See [zone-mta-template](https://github.com/zone-eu/zone-mta-template) for reference.
-
-Also, there is no zone-mta command line application anymore, you need to include it as a module.
-
 ## Requirements
 
-1.  **Node.js** v8.0.0+ for running the app
+1.  **Node.js** v16+ for running the app
 2.  **MongoDB** for storing messages in the queue
 3.  **Redis** for locking and counters
 
 ## Quickstart
 
-Assuming [Node.js](https://nodejs.org/en/download/package-manager/) (v8.0.0+), _MongoDB_ running on localhost and _git_. There must be nothing listening on ports 2525 (SMTP), 12080 (HTTP API) and 12081 (internal data channel). All these ports are configurable.
+Assuming [Node.js](https://nodejs.org/en/download/package-manager/) (v16+), _MongoDB_ running on localhost and _git_. There must be nothing listening on ports 2525 (SMTP), 12080 (HTTP API) and 12081 (internal data channel). All these ports are configurable.
 
 #### Create ZoneMTA application
 
@@ -185,7 +179,7 @@ If the message hard bounces (or after too many retries for soft bounces) a bounc
 
 ### Blacklist back-off
 
-If the bounce occured because your sending IP is blacklisted then this IP gets disabled for that MX for the next 6 hours and message is retried from a different IP. You can also disable local IP addresses permanently for specific domains with `disabledAddresses` option.
+If the bounce occurred because your sending IP is blacklisted then this IP gets disabled for that MX for the next 6 hours and message is retried from a different IP. You can also disable local IP addresses permanently for specific domains with `disabledAddresses` option.
 
 ### Error Recovery
 
@@ -216,6 +210,7 @@ in `default.js` file:
 ```
 
 or in `pools.toml` file:
+
 ```
 [[ipWarmPool]]
 address="1.2.3.1"
@@ -230,7 +225,6 @@ address="1.2.3.3"
 name="warmup.example.com"
 ratio="0.05"
 ```
-
 
 Once your IP address is warm enough then you can either increase the load ratio for it or remove the parameter entirely to share load evenly between all addresses. Be aware though that every time you change pool structure it mixes up the address resolving, so a message that is currently deferred for greylisting does not get the same IP address that it previously used and thus might get greylisted again.
 
@@ -533,7 +527,7 @@ The exposed metrics include a lot of different data but the most important ones 
 
 ##### zonemta_delivery_status
 
-`zonemta_delivery_status` exposes counters for delivery statuses. There are 3 different `result` label values
+`zonemta_delivery_status` exposes counters for delivery statuses. There are 3 different `result` label values. The zone name is exposed in the `zone` label.
 
 -   `result="delivered"` – count of deliveries accepted by remote MX
 -   `result="rejected"` – count of deliveries that hard bounced
@@ -630,8 +624,58 @@ For speedier DNS resolving there are two options. First (the default) is to cach
 }
 ```
 
+## Database fields
+
+### Queue collection
+
+By default is called as `zone-queue`.
+
+Queue entries. Each recipient has a separate queue entry.
+
+-   `id`: email queue ID
+-   `seq`: incrementing recipient counter
+-   `domain`: target domain
+-   `sendingZone`: assigned [sending zone](https://github.com/zone-eu/zone-mta/tree/master#sending-zone) for this delivery
+-   `assigned`: Zone-MTA instance ID that is processing this message. "no" means unassigned.
+-   `recipient`: target email address
+-   `locked`: if `true`, then the message is currently processed for delivery
+-   `lockTime`: when message processing started
+-   `queued`: The message will not be processed for delivery until this time
+-   `created`: the time the queue entry was added
+
+### Content storage collection
+
+By default is called as `mail.files`.
+
+[GridFS](https://www.mongodb.com/docs/manual/core/gridfs/) database. Each email has a single entry in mail.files, and 1...N entries in mailqueue collection.
+
+-   `_id`, `length`, `chunkSize`, `uploadDate`, `filename`, and `contentType` are GridFS-specific values
+-   `metadata`: contains email information
+    -   `created`: when the email was added to the queue
+    -   `data`:
+        -   `id`: email queue ID
+        -   `from`: email sender address
+        -   `to`: list of all recipients from to/cc/bcc fields
+        -   `interface`: Which component added this email to the queue
+        -   `transtype`: How was the email added to the queue (SMTP or API)
+        -   `time`: same as `metadata.created` but milliseconds timestamp
+        -   `dkim`: DKIM signing info
+        -   `userId`: WildDuck user ID of the sender
+        -   `user`: Authentication username
+        -   `reason`: why the message was added to the queue (user submit, autoreply, forward)
+        -   `origin`: IP address of the sender
+        -   `headers`: all email headers in correct order
+        -   `parsedHeaders`: structured headers for easier usage
+        -   `messageId`: Message-ID value of the email
+        -   `date`: Date header of the message. If the email is scheduled to be sent in the future, then this header should be the actual delivery time. It is not the time the email was added to the queue.
+        -   `bodySize`: email byte size without headers
+
 ## License
 
 European Union Public License 1.2 ([details](http://ec.europa.eu/idabc/eupl.html)) or later
 
 ZoneMTA is created and maintained in the European Union, licensed under EUPL and its authors have no relations to the US, thus there can not be any infringements of US-based patents.
+
+> ZoneMTA is part of the Zone Mail Suite (ZMS). Suite of programs and modules for an efficient, fast and modern email server.
+
+Copyright (c) 2024 Zone Media OÜ

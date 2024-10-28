@@ -1,4 +1,147 @@
-# CHANGELOG
+# Changelog
+
+## [3.10.0](https://github.com/zone-eu/zone-mta/compare/v3.9.6...v3.10.0) (2024-10-23)
+
+
+### Features
+
+* add zone name to prometheus ([#422](https://github.com/zone-eu/zone-mta/issues/422)) ([df06cba](https://github.com/zone-eu/zone-mta/commit/df06cba31adb78bb151679a292df0cd947246b4c))
+
+
+### Bug Fixes
+
+* **bounces:** Require word boundary when matching extended status codes ([#413](https://github.com/zone-eu/zone-mta/issues/413)) ([93b532c](https://github.com/zone-eu/zone-mta/commit/93b532c47c488bf88f6b4bf74199cac8838e4131))
+* **DKIM:** Use Mailauth to calculate message body hashes ([9117281](https://github.com/zone-eu/zone-mta/commit/9117281b84d8339062a728624728b6ce03925850))
+* **mta-sts:** set MTA-STS as disabled if redis error ZMS-170 ([#425](https://github.com/zone-eu/zone-mta/issues/425)) ([a9d543e](https://github.com/zone-eu/zone-mta/commit/a9d543efb71fe76e9f66c3ea2f46d8010200418d))
+* **readme:** ZMS-180 ([cfed6c8](https://github.com/zone-eu/zone-mta/commit/cfed6c89812953c742fdf7b4ab1f33c745db198e))
+* **tls:** sender.js will on a tls failure try a delivery with out tls. However on freebsd 13 a misconfigured server may show ([#393](https://github.com/zone-eu/zone-mta/issues/393)) ([530b495](https://github.com/zone-eu/zone-mta/commit/530b495959fdcd2f5585738ddf6e01492754cfa9))
+* typos ([#415](https://github.com/zone-eu/zone-mta/issues/415)) ([33c5d28](https://github.com/zone-eu/zone-mta/commit/33c5d284ef0962f3b4f00b453db4ba70fd4fedc8))
+
+## [3.9.6](https://github.com/zone-eu/zone-mta/compare/v3.9.5...v3.9.6) (2024-05-13)
+
+
+### Bug Fixes
+
+* **deps:** Bumped deps to clear out some security warnings ([3849037](https://github.com/zone-eu/zone-mta/commit/3849037ba0a6a680c4b9a3d2e4bd371c58bc33aa))
+
+## [3.9.5](https://github.com/zone-eu/zone-mta/compare/v3.9.4...v3.9.5) (2024-03-27)
+
+
+### Bug Fixes
+
+* **api:** Added query argument `includeDisabled` to /zones API endpoint. If `true` returns all zones ([fb826d6](https://github.com/zone-eu/zone-mta/commit/fb826d6de294f23387b1fb4ef90ad20889779113))
+
+## [3.9.4](https://github.com/zone-eu/zone-mta/compare/v3.9.3...v3.9.4) (2024-02-09)
+
+
+### Bug Fixes
+
+* **logs:** send bounce information to remote log ([3fd3986](https://github.com/zone-eu/zone-mta/commit/3fd3986b3874071e135060fca7695a23715c4ff1))
+
+## [3.9.3](https://github.com/zone-eu/zone-mta/compare/v3.9.2...v3.9.3) (2024-02-08)
+
+
+### Bug Fixes
+
+* **bounces:** fixed bounce handling in mail queue ([05d2b8d](https://github.com/zone-eu/zone-mta/commit/05d2b8d6ec21d4c280b5da7e7e1dd1053354f49d))
+* **sts:** do not try to store error object as JSON value ([9a45336](https://github.com/zone-eu/zone-mta/commit/9a45336a2bc92247c95880abf1aa0df42b682b2a))
+
+## [3.9.2](https://github.com/zone-eu/zone-mta/compare/v3.9.1...v3.9.2) (2024-02-08)
+
+
+### Bug Fixes
+
+* **deps:** bumped nodemailer and smtp-server versions ([0a2371d](https://github.com/zone-eu/zone-mta/commit/0a2371dbc4dc5874ebea04b8ce3568030039d853))
+* **logs:** added new remote log entry QUEUE_POLL ([800b583](https://github.com/zone-eu/zone-mta/commit/800b5835e99a7f1e0370b114b2821464785ac30a))
+
+## [3.9.1](https://github.com/zone-eu/zone-mta/compare/v3.9.0...v3.9.1) (2024-02-02)
+
+
+### Bug Fixes
+
+* **api:** added endpoint to list locked domains ([25102ca](https://github.com/zone-eu/zone-mta/commit/25102ca71010951fb592c6d8bdb4852976a49c1e))
+* **loop:** reject messages with too many Received headers ([cbffa6d](https://github.com/zone-eu/zone-mta/commit/cbffa6d3dcadb937b9303a42fbe2603fd1668fb8))
+* **mime-head:** Increased allowed MIME node header size to 2MB ([26e4896](https://github.com/zone-eu/zone-mta/commit/26e48967bd96e8aa08b1986513fe4733961bd672))
+* **tls-options:** Retrieve ignoreTLS value from Sending Zone, or default to false ([#365](https://github.com/zone-eu/zone-mta/issues/365)) ([336e835](https://github.com/zone-eu/zone-mta/commit/336e8358be5992bd15392fc07064540fda4aa23d))
+
+## [3.9.0](https://github.com/zone-eu/zone-mta/compare/v3.8.0...v3.9.0) (2024-01-19)
+
+
+### Features
+
+* **bounces:** Send a delayed notification email if a delivery has not been completed after 3 hours ZMS-56 ([#363](https://github.com/zone-eu/zone-mta/issues/363)) ([a535e3a](https://github.com/zone-eu/zone-mta/commit/a535e3a7e10e517eaac13af6819420aa45d10725))
+
+## [3.8.0](https://github.com/zone-eu/zone-mta/compare/v3.7.0...v3.8.0) (2024-01-15)
+
+
+### Features
+
+* **api:** Allow ordering queue listing ([41017ff](https://github.com/zone-eu/zone-mta/commit/41017ffa3cdc852e0ea4960ec45ea94092aa7699))
+
+## [3.7.0](https://github.com/zone-eu/zone-mta/compare/v3.6.13...v3.7.0) (2023-12-14)
+
+
+### Features
+
+* **plugins:** Added new plugin hook sender:responseError, allow configuratble defer times ([#360](https://github.com/zone-eu/zone-mta/issues/360)) ([061248f](https://github.com/zone-eu/zone-mta/commit/061248f647a98a74f33fa0da09ea2a13e42be6ac))
+
+
+### Bug Fixes
+
+* **bounce:** Fixed Outlook no-such-user bounce detection ([#357](https://github.com/zone-eu/zone-mta/issues/357)) ([0b49571](https://github.com/zone-eu/zone-mta/commit/0b49571fb6677a1570ec1b266cecb81aa5e567e5))
+
+## [3.6.13](https://github.com/zone-eu/zone-mta/compare/v3.6.12...v3.6.13) (2023-10-12)
+
+
+### Bug Fixes
+
+* **deploy:** updated package-lock to fix release ([4248526](https://github.com/zone-eu/zone-mta/commit/42485265748bef6cbcf34eb570fdfae422128abb))
+
+## [3.6.12](https://github.com/zone-eu/zone-mta/compare/v3.6.11...v3.6.12) (2023-10-12)
+
+
+### Bug Fixes
+
+* **queue:** mark emails with 'mailbox full' responses as rejected, not deferred ([c2040e2](https://github.com/zone-eu/zone-mta/commit/c2040e284e337e79c6987b3cf393c669d08a04c8))
+* **queue:** replaced non-likely bounces from deferred to rejected ([c701efd](https://github.com/zone-eu/zone-mta/commit/c701efde4907ea969aef92e7dbfc517a993d8ce9))
+
+## [3.6.11](https://github.com/zone-eu/zone-mta/compare/v3.6.10...v3.6.11) (2023-10-05)
+
+
+### Bug Fixes
+
+* **mail2http:** retry 5xx responses ([33aa6d5](https://github.com/zone-eu/zone-mta/commit/33aa6d5b3c726206563649137de2b42e9bb38bd7))
+
+## [3.6.10](https://github.com/zone-eu/zone-mta/compare/v3.6.9...v3.6.10) (2023-09-29)
+
+
+### Bug Fixes
+
+* **bounces:** Fixed MS365 missing user bounce check regex ([3e0853a](https://github.com/zone-eu/zone-mta/commit/3e0853aef154bdfcdaf7d879017559991e03b507))
+
+## [3.6.9](https://github.com/zone-eu/zone-mta/compare/v3.6.8...v3.6.9) (2023-09-18)
+
+
+### Bug Fixes
+
+* **deploy:** Added repository URL for automatic publishing ([6172534](https://github.com/zone-eu/zone-mta/commit/6172534567299e0c9c568446c6b62e87949e9272))
+
+## [3.6.8](https://github.com/zone-eu/zone-mta/compare/v3.6.7...v3.6.8) (2023-09-18)
+
+
+### Bug Fixes
+
+* **readme:** Updated readme to trigger package publish ([b90d31b](https://github.com/zone-eu/zone-mta/commit/b90d31b610862bf1c9db9c4df41af1a41a905866))
+
+## [3.4.1](https://github.com/zone-eu/zone-mta/compare/v3.4.0...v3.4.1) (2023-09-18)
+
+
+### Bug Fixes
+
+* **deploy:** Set up auto publishing to NPM ([#338](https://github.com/zone-eu/zone-mta/issues/338)) ([b1d6fef](https://github.com/zone-eu/zone-mta/commit/b1d6fef8931a4e40042694414318d1dd5fda2914))
+* **tests:** Added GitHub action to run tests ([#341](https://github.com/zone-eu/zone-mta/issues/341)) ([908edf9](https://github.com/zone-eu/zone-mta/commit/908edf9321be5342426127d081997bde116ff23b))
+
+## CHANGELOG
 
 -   v3.6.6 2023-05-24
 
@@ -67,7 +210,7 @@
 
 -   v2.3.2 2020-10-05
 
-    -   Do not categorize response codes like 550 automaticaly as "recipient"
+    -   Do not categorize response codes like 550 automatically as "recipient"
 
 -   v2.3.1 2020-09-24
 
@@ -154,7 +297,7 @@
 
 -   v1.10.4 2018-08-22
 
-    -   Fixed an issue with MX connection timeouts where a working MX exisits but never was tried
+    -   Fixed an issue with MX connection timeouts where a working MX exists but never was tried
 
 -   v1.10.2 2018-08-16
 

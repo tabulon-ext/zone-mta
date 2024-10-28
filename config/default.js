@@ -45,7 +45,10 @@ module.exports = {
         defaultZone: 'default',
 
         // remove messages from queue if not delivered or bounced before maxQueueTime
-        maxQueueTime: 30 * 24 * 3600 * 1000
+        maxQueueTime: 30 * 24 * 3600 * 1000,
+
+        // log every poll query from queue
+        logQueuePolling: false
     },
 
     // plugin files to load into ZoneMTA, relative to ./plugins folder
@@ -132,6 +135,13 @@ module.exports = {
             },
             disableInterfaces: ['forwarder'], // do not bounce messages from this interface
             sendingZone: 'bounces',
+
+            // Send a warning email about delayed delivery
+            delayEmail: {
+                enabled: true,
+                after: 3 * 3600 * 1000 // 3h
+            },
+
             zoneConfig: {
                 // specify zone specific bounce options
                 myzonename: {
@@ -168,7 +178,7 @@ module.exports = {
         // is added to the envelope object, so you can also screen messages against some specific attachments.
         // This adds some CPU load as attachments need to be decoded and md5 hashes,
         // so increase smtpInterfaces.*.processes count to handle the increased load
-        // Example: 15872511b0d000c239 ATTACHMENT name="foto-02.jpg" type="image/jpeg" size=1922193 md5=6e0a1c5a2276f7afca68ec7ee4c3200c
+        // Example: 15872511b0d000c239 ATTACHMENT name="photo-02.jpg" type="image/jpeg" size=1922193 md5=6e0a1c5a2276f7afca68ec7ee4c3200c
         'core/image-hashes': false, // 'receiver',
 
         // Sign outbound messages with DKIM
@@ -190,6 +200,14 @@ module.exports = {
             addSignatureTimestamp: false,
             // Time validity of the signature given in seconds, for default value see below
             signatureExpireIn: 0
+        },
+
+        // Make sure messages have all required headers like Date or Message-ID
+        'core/delivery-loop': {
+            enabled: ['receiver', 'main'],
+
+            // Reject messages with higher Received count
+            maxHops: 35
         }
     },
 
